@@ -10,7 +10,8 @@ complet de MdM Remote, comme l'exige l'AGPL.
   `remote.mdm-services.fr`, sa clé publique et l'API ; réglages serveur, proxy et WebSocket masqués ; pas de
   recherche de mise à jour officielle. Un `custom.txt` posé à côté du programme est ignoré.
 - **Nom affiché « MdM Remote »** (`get_display_name` dans `src/common.rs`) : textes de l'interface, titre de fenêtre,
-  info-bulle de la zone de notification, informations du fichier `.exe`. Le nom interne reste « RustDesk » : mêmes
+  info-bulle de la zone de notification, informations du fichier `.exe`, raccourcis (bureau, menu Démarrer) et
+  entrée « Applications installées » (`install_me` dans `src/platform/windows.rs`, éditeur Mdm-services.fr). Le nom interne reste « RustDesk » : mêmes
   dossiers de configuration, même service Windows, donc un poste qui avait RustDesk garde son ID et son mot de passe.
 - **Client personnalisé** (`is_custom_client` renvoie toujours vrai) : réglages par défaut des clients personnalisés
   de RustDesk, mises à jour officielles désactivées.

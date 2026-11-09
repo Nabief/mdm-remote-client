@@ -379,9 +379,18 @@ class _ConnectionPageState extends State<ConnectionPage>
     var w = Container(
       width: 320 + 20 * 2,
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 22),
+      // MdM Remote : carte arrondie, légère ombre.
       decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(13)),
-          border: Border.all(color: Theme.of(context).colorScheme.background)),
+          color: Theme.of(context).scaffoldBackgroundColor,
+          borderRadius: const BorderRadius.all(Radius.circular(14)),
+          border: Border.all(color: MyTheme.accent.withOpacity(0.12)),
+          boxShadow: [
+            BoxShadow(
+              color: MyTheme.mdmDark.withOpacity(0.06),
+              blurRadius: 6,
+              offset: const Offset(0, 2),
+            ),
+          ]),
       child: Ink(
         child: Column(
           children: [
@@ -552,18 +561,19 @@ class _ConnectionPageState extends State<ConnectionPage>
               padding: const EdgeInsets.only(top: 13.0),
               child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                 SizedBox(
-                  height: 28.0,
+                  height: 34.0,
                   child: ElevatedButton(
                     onPressed: () {
                       onConnect();
                     },
-                    child: Text(translate("Connect")),
+                    child: Text(translate("Connect"),
+                        style: const TextStyle(fontWeight: FontWeight.w600)),
                   ),
                 ),
                 const SizedBox(width: 8),
                 Container(
-                  height: 28.0,
-                  width: 28.0,
+                  height: 34.0,
+                  width: 34.0,
                   decoration: BoxDecoration(
                     border: Border.all(color: Theme.of(context).dividerColor),
                     borderRadius: BorderRadius.circular(8),

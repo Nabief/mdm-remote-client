@@ -461,9 +461,10 @@ class _CmHeaderState extends State<_CmHeader>
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
+          // MdM Remote : dégradé vert MdM.
           colors: [
-            Color(0xff00bfe1),
-            Color(0xff0071ff),
+            Color(0xff1E6B4F),
+            Color(0xff12382B),
           ],
         ),
       ),
@@ -542,11 +543,21 @@ class _CmHeaderState extends State<_CmHeader>
                     ).marginOnly(right: 8.0),
                     if (client.authorized)
                       Obx(
-                        () => Text(
-                          formatDurationToTime(
-                            Duration(seconds: _time.value),
+                        () => Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: MyTheme.mdmYellow,
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                          style: TextStyle(color: Colors.white),
+                          child: Text(
+                            formatDurationToTime(
+                              Duration(seconds: _time.value),
+                            ),
+                            style: const TextStyle(
+                                color: MyTheme.mdmDark,
+                                fontWeight: FontWeight.w700),
+                          ),
                         ),
                       )
                   ],
@@ -630,12 +641,13 @@ class _PrivilegeBoardState extends State<_PrivilegeBoard> {
     return Tooltip(
       message: "$tooltipText: ${enabled ? "ON" : "OFF"}",
       waitDuration: Duration.zero,
+      // MdM Remote : tuiles claires, icône verte quand l'autorisation est active, grise sinon.
       child: Container(
         decoration: BoxDecoration(
           color: enabled
-              ? (canModify ? MyTheme.accent : MyTheme.accent.withOpacity(0.6))
-              : Colors.grey[700],
-          borderRadius: BorderRadius.circular(10.0),
+              ? MyTheme.accent.withOpacity(canModify ? 0.14 : 0.08)
+              : Colors.grey.withOpacity(0.12),
+          borderRadius: BorderRadius.circular(12.0),
         ),
         padding: EdgeInsets.all(8.0),
         child: InkWell(
@@ -649,7 +661,11 @@ class _PrivilegeBoardState extends State<_PrivilegeBoard> {
               Expanded(
                 child: Icon(
                   iconData,
-                  color: Colors.white,
+                  color: enabled
+                      ? (canModify
+                          ? MyTheme.accent
+                          : MyTheme.accent.withOpacity(0.6))
+                      : Colors.grey,
                 ),
               ),
             ],
@@ -672,16 +688,9 @@ class _PrivilegeBoardState extends State<_PrivilegeBoard> {
       margin: EdgeInsets.all(5.0),
       padding: EdgeInsets.all(5.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        color: Theme.of(context).colorScheme.background,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 1,
-            offset: Offset(0, 1.5),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(12.0),
+        color: Theme.of(context).scaffoldBackgroundColor,
+        border: Border.all(color: MyTheme.accent.withOpacity(0.12)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

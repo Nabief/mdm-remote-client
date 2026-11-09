@@ -14,6 +14,10 @@ complet de MdM Remote, comme l'exige l'AGPL.
   dossiers de configuration, même service Windows, donc un poste qui avait RustDesk garde son ID et son mot de passe.
 - **Client personnalisé** (`is_custom_client` renvoie toujours vrai) : réglages par défaut des clients personnalisés
   de RustDesk, mises à jour officielles désactivées.
+- **Interface aux couleurs MdM** : palette verte (`MyTheme` dans `flutter/lib/common.dart`), colonne gauche vert
+  foncé avec ID et mot de passe en cartes (`desktop_home_page.dart`), carte de connexion arrondie
+  (`connection_page.dart`), fenêtre « Autorisations » à en-tête vert et tuiles claires (`server_page.dart`), cartes des paramètres à plat
+  et arrondies, barre d'outils de session et paramètres en vert (palette).
 - **Icônes et logos** MdM Remote (`res/`, `flutter/assets/`, `flutter/windows/runner/resources/`).
 - **Compilation** : `.github/workflows/mdm-build.yml` (Windows x64, non signé). Les autres workflows de RustDesk ont
   été retirés de cette branche.

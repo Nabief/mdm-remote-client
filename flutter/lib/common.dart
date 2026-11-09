@@ -248,17 +248,21 @@ class ColorThemeExtension extends ThemeExtension<ColorThemeExtension> {
 class MyTheme {
   MyTheme._();
 
-  static const Color grayBg = Color(0xFFEFEFF2);
-  static const Color accent = Color(0xFF0071FF);
-  static const Color accent50 = Color(0x770071FF);
-  static const Color accent80 = Color(0xAA0071FF);
+  // MdM Remote : palette MdM Services (vert foncé #12382B, vert #1E6B4F, jaune #F3B740).
+  static const Color grayBg = Color(0xFFEFF4F1);
+  static const Color accent = Color(0xFF1E6B4F);
+  static const Color accent50 = Color(0x771E6B4F);
+  static const Color accent80 = Color(0xAA1E6B4F);
+  static const Color mdmDark = Color(0xFF12382B);
+  static const Color mdmDarker = Color(0xFF0D2A20);
+  static const Color mdmYellow = Color(0xFFF3B740);
   static const Color canvasColor = Color(0xFF212121);
   static const Color border = Color(0xFFCCCCCC);
-  static const Color idColor = Color(0xFF00B6F0);
+  static const Color idColor = Color(0xFF2A9D74);
   static const Color darkGray = Color.fromARGB(255, 148, 148, 148);
   static const Color cmIdColor = Color(0xFF21790B);
   static const Color dark = Colors.black87;
-  static const Color button = Color(0xFF2C8CFF);
+  static const Color button = Color(0xFF1E6B4F);
   static const Color hoverBorder = Color(0xFF999999);
 
   // ListTile
@@ -396,7 +400,7 @@ class MyTheme {
             filled: true,
             isDense: true,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(10),
             ),
           )
         : null,
@@ -408,6 +412,14 @@ class MyTheme {
             TextStyle(fontSize: 14, color: Colors.black87, height: 1.25),
         labelLarge: TextStyle(fontSize: 16.0, color: MyTheme.accent80)),
     cardColor: grayBg,
+    // MdM Remote : cartes à plat, plus arrondies, fin liseré vert.
+    cardTheme: CardTheme(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Color(0x1A1E6B4F)),
+      ),
+    ),
     hintColor: Color(0xFFAAAAAA),
     visualDensity: VisualDensity.adaptivePlatformDensity,
     tabBarTheme: const TabBarTheme(
@@ -431,7 +443,7 @@ class MyTheme {
       style: ElevatedButton.styleFrom(
         backgroundColor: MyTheme.accent,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(10.0),
         ),
       ),
     ),
@@ -452,7 +464,7 @@ class MyTheme {
         style:
             MenuStyle(backgroundColor: MaterialStatePropertyAll(Colors.white))),
     colorScheme: ColorScheme.light(
-        primary: Colors.blue, secondary: accent, background: grayBg),
+        primary: accent, secondary: accent, background: grayBg),
     popupMenuTheme: PopupMenuThemeData(
         color: Colors.white,
         shape: RoundedRectangleBorder(
@@ -494,7 +506,7 @@ class MyTheme {
             filled: true,
             isDense: true,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(10),
             ),
           )
         : null,
@@ -510,6 +522,13 @@ class MyTheme {
       ),
     ),
     cardColor: Color(0xFF24252B),
+    cardTheme: CardTheme(
+      elevation: 0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: Color(0x33FFFFFF)),
+      ),
+    ),
     visualDensity: VisualDensity.adaptivePlatformDensity,
     tabBarTheme: const TabBarTheme(
       labelColor: Colors.white70,
@@ -560,7 +579,7 @@ class MyTheme {
         style: MenuStyle(
             backgroundColor: MaterialStatePropertyAll(Color(0xFF121212)))),
     colorScheme: ColorScheme.dark(
-      primary: Colors.blue,
+      primary: accent,
       secondary: accent,
       background: Color(0xFF24252B),
     ),

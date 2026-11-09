@@ -83,7 +83,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
       if (bind.isCustomClient())
         Align(
           alignment: Alignment.center,
-          child: loadPowered(context),
+          child: Builder(builder: (ctx) => loadPowered(ctx)),
         ),
       Align(
         alignment: Alignment.center,
@@ -125,12 +125,29 @@ class _DesktopHomePageState extends State<DesktopHomePage>
         ).marginOnly(bottom: 6, right: 6)
       ]);
     }
-    final textColor = Theme.of(context).textTheme.titleLarge?.color;
+    final textColor = Colors.white;
+    // MdM Remote : colonne vert foncé ; son contenu suit un thème sombre (textes clairs, logo « dark »).
+    final base = Theme.of(context);
+    final sideTheme = base.copyWith(
+      colorScheme: base.colorScheme
+          .copyWith(brightness: Brightness.dark, background: MyTheme.mdmDark),
+      textTheme: base.textTheme
+          .apply(bodyColor: Colors.white, displayColor: Colors.white),
+      hintColor: Colors.white60,
+    );
     return ChangeNotifierProvider.value(
       value: gFFI.serverModel,
-      child: Container(
-        width: isIncomingOnly ? 280.0 : 200.0,
-        color: Theme.of(context).colorScheme.background,
+      child: Theme(
+       data: sideTheme,
+       child: Container(
+        width: isIncomingOnly ? 280.0 : 260.0,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [MyTheme.mdmDark, MyTheme.mdmDarker],
+          ),
+        ),
         child: Stack(
           children: [
             Column(
@@ -174,13 +191,25 @@ class _DesktopHomePageState extends State<DesktopHomePage>
               )
           ],
         ),
+       ),
       ),
     );
   }
 
+  /// MdM Remote : carte translucide des blocs de la colonne gauche (ID, mot de passe).
+  static BoxDecoration mdmSideCard() => BoxDecoration(
+        color: Colors.white.withOpacity(0.07),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white.withOpacity(0.10)),
+      );
+
   buildRightPane(BuildContext context) {
+    // MdM Remote : fond légèrement teinté en clair, pour détacher les cartes blanches.
+    final dark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
+      color: dark
+          ? Theme.of(context).scaffoldBackgroundColor
+          : const Color(0xFFF4F7F5),
       child: ConnectionPage(),
     );
   }
@@ -188,19 +217,16 @@ class _DesktopHomePageState extends State<DesktopHomePage>
   buildIDBoard(BuildContext context) {
     final model = gFFI.serverModel;
     return Container(
-      margin: const EdgeInsets.only(left: 20, right: 11),
-      height: 57,
+      margin: const EdgeInsets.only(left: 16, right: 16, top: 6),
+      padding: const EdgeInsets.only(left: 14, right: 6, top: 6, bottom: 4),
+      height: 84,
+      decoration: mdmSideCard(),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        textBaseline: TextBaseline.alphabetic,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 2,
-            decoration: const BoxDecoration(color: MyTheme.accent),
-          ).marginOnly(top: 5),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(left: 7),
+              padding: const EdgeInsets.only(left: 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -211,15 +237,12 @@ class _DesktopHomePageState extends State<DesktopHomePage>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          translate("ID"),
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .titleLarge
-                                  ?.color
-                                  ?.withOpacity(0.5)),
-                        ).marginOnly(top: 5),
+                          translate("ID").toUpperCase(),
+                          style: const TextStyle(
+                              fontSize: 11,
+                              letterSpacing: 0.9,
+                              color: Color(0xFF9FBFB2)),
+                        ).marginOnly(top: 6),
                         buildPopupMenu(context)
                       ],
                     ),
@@ -236,10 +259,14 @@ class _DesktopHomePageState extends State<DesktopHomePage>
                         readOnly: true,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(top: 10, bottom: 10),
+                          filled: false,
+                          contentPadding: EdgeInsets.only(top: 6, bottom: 6),
                         ),
-                        style: TextStyle(
-                          fontSize: 22,
+                        style: const TextStyle(
+                          fontSize: 27,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1,
+                          color: Colors.white,
                         ),
                       ).workaroundFreezeLinuxMint(),
                     ),
@@ -254,7 +281,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
   }
 
   Widget buildPopupMenu(BuildContext context) {
-    final textColor = Theme.of(context).textTheme.titleLarge?.color;
+    const textColor = Colors.white;
     RxBool hover = false.obs;
     return InkWell(
       onTap: DesktopTabPage.onAddSetting,
@@ -264,12 +291,12 @@ class _DesktopHomePageState extends State<DesktopHomePage>
           () => CircleAvatar(
             radius: 15,
             backgroundColor: hover.value
-                ? Theme.of(context).scaffoldBackgroundColor
-                : Theme.of(context).colorScheme.background,
+                ? Colors.white.withOpacity(0.15)
+                : Colors.transparent,
             child: Icon(
               Icons.more_vert_outlined,
               size: 20,
-              color: hover.value ? textColor : textColor?.withOpacity(0.5),
+              color: hover.value ? textColor : textColor.withOpacity(0.5),
             ),
           ),
         ),
@@ -295,26 +322,24 @@ class _DesktopHomePageState extends State<DesktopHomePage>
     final showOneTime = model.approveMode != 'click' &&
         model.verificationMethod != kUsePermanentPassword;
     return Container(
-      margin: EdgeInsets.only(left: 20.0, right: 16, top: 13, bottom: 13),
+      margin: EdgeInsets.only(left: 16.0, right: 16, top: 12, bottom: 12),
+      padding: const EdgeInsets.only(left: 14, right: 6, top: 10, bottom: 2),
+      decoration: mdmSideCard(),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.baseline,
-        textBaseline: TextBaseline.alphabetic,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 2,
-            height: 52,
-            decoration: BoxDecoration(color: MyTheme.accent),
-          ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(left: 7),
+              padding: const EdgeInsets.only(left: 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AutoSizeText(
-                    translate("One-time Password"),
-                    style: TextStyle(
-                        fontSize: 14, color: textColor?.withOpacity(0.5)),
+                    translate("One-time Password").toUpperCase(),
+                    style: const TextStyle(
+                        fontSize: 11,
+                        letterSpacing: 0.9,
+                        color: Color(0xFF9FBFB2)),
                     maxLines: 1,
                   ),
                   Row(
@@ -333,10 +358,14 @@ class _DesktopHomePageState extends State<DesktopHomePage>
                             readOnly: true,
                             decoration: InputDecoration(
                               border: InputBorder.none,
+                              filled: false,
                               contentPadding:
-                                  EdgeInsets.only(top: 14, bottom: 10),
+                                  EdgeInsets.only(top: 10, bottom: 10),
                             ),
-                            style: TextStyle(fontSize: 15),
+                            style: const TextStyle(
+                                fontSize: 18,
+                                fontFamily: 'monospace',
+                                color: Colors.white),
                           ).workaroundFreezeLinuxMint(),
                         ),
                       ),
@@ -402,7 +431,10 @@ class _DesktopHomePageState extends State<DesktopHomePage>
                   alignment: Alignment.centerLeft,
                   child: Text(
                     translate("Your Desktop"),
-                    style: Theme.of(context).textTheme.titleLarge,
+                    style: const TextStyle(
+                        fontSize: 19,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white),
                   ),
                 ),
             ],
@@ -414,13 +446,15 @@ class _DesktopHomePageState extends State<DesktopHomePage>
             Text(
               translate("desk_tip"),
               overflow: TextOverflow.clip,
-              style: Theme.of(context).textTheme.bodySmall,
+              style: const TextStyle(
+                  fontSize: 12.5, height: 1.4, color: Color(0xFFB8D3C8)),
             ),
           if (isOutgoingOnly)
             Text(
               translate("outgoing_only_desk_tip"),
               overflow: TextOverflow.clip,
-              style: Theme.of(context).textTheme.bodySmall,
+              style: const TextStyle(
+                  fontSize: 12.5, height: 1.4, color: Color(0xFFB8D3C8)),
             ),
         ],
       ),

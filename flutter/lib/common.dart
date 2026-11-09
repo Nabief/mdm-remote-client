@@ -3061,7 +3061,8 @@ int versionCmp(String v1, String v2) {
 }
 
 String getWindowName({WindowType? overrideType}) {
-  final name = bind.mainGetAppNameSync();
+  // MdM Remote : nom affiché (doit rester identique à get_rustdesk_app_name côté Rust, qui sert à retrouver la fenêtre).
+  const name = 'MdM Remote';
   switch (overrideType ?? kWindowType) {
     case WindowType.Main:
       return name;

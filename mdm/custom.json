@@ -1,0 +1,13 @@
+{
+  "override-settings": {
+    "custom-rendezvous-server": "remote.mdm-services.fr",
+    "relay-server": "remote.mdm-services.fr",
+    "key": "6oguG4HKyUYFJsehC30T+4koWEOk1l8CB6LThm9Br5U=",
+    "api-server": "https://remote.mdm-services.fr",
+    "hide-server-settings": "Y",
+    "hide-proxy-settings": "Y",
+    "hide-websocket-settings": "Y",
+    "enable-check-update": "N",
+    "allow-auto-update": "N"
+  }
+}

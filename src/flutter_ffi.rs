@@ -48,11 +48,9 @@ fn initialize(app_dir: &str, custom_client_config: &str) {
         *config::APP_DIR.write().unwrap() = app_dir.to_owned();
     }
     // core_main's load_custom_client does not work for flutter since it is only applied to its load_library in main.c
-    if custom_client_config.is_empty() {
-        crate::load_custom_client();
-    } else {
-        crate::read_custom_client(custom_client_config);
-    }
+    // MdM Remote : toujours la configuration compilée (mdm/custom.json).
+    let _ = custom_client_config;
+    crate::load_custom_client();
     #[cfg(target_os = "android")]
     {
         // flexi_logger can't work when android_logger initialized.

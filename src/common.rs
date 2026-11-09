@@ -2506,7 +2506,27 @@ pub fn rustdesk_interval(i: Interval) -> ThrottledInterval {
     ThrottledInterval::new(i)
 }
 
+/// MdM Remote : nom affiché (le nom interne reste « RustDesk » : mêmes dossiers, service et ID que RustDesk).
+pub const MDM_DISPLAY_NAME: &str = "MdM Remote";
+
+#[inline]
+pub fn get_display_name() -> String {
+    MDM_DISPLAY_NAME.to_owned()
+}
+
+/// MdM Remote : réglages compilés dans le programme (serveur, clé, API, réglages masqués), voir mdm/custom.json.
+/// Un custom.txt posé à côté du programme est ignoré.
 pub fn load_custom_client() {
+    match serde_json::from_str::<std::collections::HashMap<String, serde_json::Value>>(include_str!(
+        "../mdm/custom.json"
+    )) {
+        Ok(data) => apply_custom_client(data),
+        Err(e) => log::error!("Failed to parse built-in MdM config: {e}"),
+    }
+}
+
+#[allow(dead_code)]
+fn load_custom_client_upstream() {
     #[cfg(debug_assertions)]
     if let Ok(data) = std::fs::read_to_string("./custom.txt") {
         read_custom_client(data.trim());
@@ -2618,13 +2638,16 @@ pub fn read_custom_client(config: &str) {
         log::error!("Failed to dec custom client config");
         return;
     };
-    let Ok(mut data) =
+    let Ok(data) =
         serde_json::from_slice::<std::collections::HashMap<String, serde_json::Value>>(&data)
     else {
         log::error!("Failed to parse custom client config");
         return;
     };
+    apply_custom_client(data);
+}
 
+fn apply_custom_client(mut data: std::collections::HashMap<String, serde_json::Value>) {
     if let Some(app_name) = data.remove("app-name") {
         if let Some(app_name) = app_name.as_str() {
             *config::APP_NAME.write().unwrap() = app_name.to_owned();
@@ -2707,7 +2730,9 @@ pub fn get_builtin_option(key: &str) -> String {
 
 #[inline]
 pub fn is_custom_client() -> bool {
-    get_app_name() != "RustDesk"
+    // MdM Remote : client personnalisé (pas de mise à jour officielle, réglages par défaut des clients
+    // personnalisés), tout en gardant le nom interne « RustDesk ».
+    true
 }
 
 pub fn verify_login(_raw: &str, _id: &str) -> bool {
